@@ -1,0 +1,9 @@
+[+]Create directory structure
+[+]Create npm project and install all dependencies
+  -Dependencies
+  -express
+  -ejs express-ejs-layouts
+  -Dev dependencies
+   -nodemon  
+[+]Create express server-server.js
+[.]Git setup and first commit
