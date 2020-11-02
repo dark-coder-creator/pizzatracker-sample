@@ -1,4 +1,4 @@
-require('dotenv').config()
+//require('dotenv').config('/.env')
 const express=require('express')
 const app=express()
 const ejs=require('ejs')
@@ -10,8 +10,8 @@ const session=require('express-session')
 const flash=require('express-flash')
 const MongoDbStore = require('connect-mongo')(session)
 //DATABASE CONNECTION
-
-mongoose.connect("mongodb+srv://test:test@demo.vedqt.mongodb.net/pizza?retryWrites=true&w=majority",{useNewUrlParser:true,useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:true}
+const url = 'mongodb+srv://test:test@demo.vedqt.mongodb.net/pizza?retryWrites=true&w=majority';
+mongoose.connect(url,{useNewUrlParser:true,useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:true}
 );
 const connection=mongoose.connection;
 connection.once('open',()=>{
@@ -21,22 +21,34 @@ console.log('Database connected...');
 });
 
 // Session store
-let mongoStore = new MongoDbStore({
-    uri: 'mongodb+srv://test:test@demo.vedqt.mongodb.net/pizza?retryWrites=true&w=majority',
-    collection: 'sessions'
-})
+//var app = express();
+
+  let mongoStore = new MongoDbStore({
+     mongooseConnection: connection,
+      collection: 'sessions'
+ })
 //session config
 app.use(session({
-    secret:process.env.COOKIE-SECRET,
-    resave:false,
-    saveUninitialized:false,
-    store:mongoStore,
-    cookie:{maxAge:1000*60*60*24}
+    secret:"thisismysecretkey",
+    resave: false,
+    store: mongoStore,
+    saveUninitialized: false,
+    cookie: {maxAge: 1000 * 60 * 60 * 24}//24hours
+    
 }))
-app.use(flash())
 
-//ASSETS
+app.use(flash())
+// app.use(express.urlencoded({ extended: false}))
+
+// //ASSETS
 app.use(express.static('public'))
+app.use(express.json())
+//Global Middleware
+app.use((req, res, next)=>{
+   res.locals.session=req.session
+   next()
+
+})
 
 //set template engine
 app.use(expressLayout)

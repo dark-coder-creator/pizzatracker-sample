@@ -13,15 +13,19 @@
   "author": "Cheloor Saravanan Mohandas",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
+    "connect-mongo": "^3.2.0",
     "connect-mongodb-session": "^2.4.1",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-flash": "0.0.2",
+    "express-middleware": "^3.4.2",
     "express-session": "^1.17.1",
     "mongoose": "^5.10.11",
     "nodemon": "^2.0.6",
+    "noty": "^3.2.0-beta",
     "tailwindcss": "^1.9.6"
   },
   "devDependencies": {
