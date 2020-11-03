@@ -5285,6 +5285,7 @@ function updateCart(pizza) {
 addToCart.forEach(function (btn) {
   btn.addEventListener('click', function (e) {
     var pizza = JSON.parse(btn.dataset.pizza);
+    console.log(pizza);
     updateCart(pizza);
   });
 });

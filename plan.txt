@@ -19,3 +19,11 @@
 [.]Add to cart functionality
    [+]Fetch all pizzas from db and show on homepage
    [+]Create menu model and put dummy data 
+   -connect to mongodb
+   -use connect mongo for session store
+      -dependencies
+        -mongoose,express-session,connect-mongo,dotem=nv
+    -axios to send js request
+    -install notification library
+ [+]Create login page with routes
+  [+]Create login page with register       
