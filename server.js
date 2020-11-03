@@ -1,4 +1,4 @@
-//require('dotenv').config('/.env')
+require('dotenv').config()
 const express=require('express')
 const app=express()
 const ejs=require('ejs')
@@ -23,13 +23,13 @@ console.log('Database connected...');
 // Session store
 //var app = express();
 
-  let mongoStore = new MongoDbStore({
-     mongooseConnection: connection,
-      collection: 'sessions'
- })
+   let mongoStore = new MongoDbStore({
+      mongooseConnection: connection,
+       collection: 'sessions'
+  })
 //session config
 app.use(session({
-    secret:"thisismysecretkey",
+    secret:"mysecretkey",
     resave: false,
     store: mongoStore,
     saveUninitialized: false,
@@ -46,6 +46,7 @@ app.use(express.json())
 //Global Middleware
 app.use((req, res, next)=>{
    res.locals.session=req.session
+   res.locals.user=req.user
    next()
 
 })
