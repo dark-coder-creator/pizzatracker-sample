@@ -25,5 +25,9 @@
         -mongoose,express-session,connect-mongo,dotem=nv
     -axios to send js request
     -install notification library
- [+]Create login page with routes
-  [+]Create login page with register       
+[+]Create login page with routes
+[+]Create register page with routes
+[+]Build register crud
+[+]Buid login using passport
+   -install dependencies passport passport-local express-session
+   

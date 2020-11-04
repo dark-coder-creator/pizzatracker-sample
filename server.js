@@ -9,6 +9,7 @@ const mongoose=require('mongoose')
 const session=require('express-session')
 const flash=require('express-flash')
 const MongoDbStore = require('connect-mongo')(session)
+const passport=require('passport')
 //DATABASE CONNECTION
 //const url = 'mongodb+srv://test:test@demo.vedqt.mongodb.net/pizza?retryWrites=true&w=majority';
 mongoose.connect('mongodb+srv://test:test@demo1.vedqt.mongodb.net/pizza?retryWrites=true&w=majority',{useNewUrlParser:true,useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:true}
@@ -33,9 +34,15 @@ app.use(session({
     resave: false,
     store: mongoStore,
     saveUninitialized: false,
-    cookie: {maxAge: 1000 * 15}//24hours
+    cookie: {maxAge: 1000 * 60 * 60  * 24}//24hours
     
 }))
+
+//Passport config
+const passportInit=require('./app/config/passport')
+passportInit(passport)
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(flash())
 
