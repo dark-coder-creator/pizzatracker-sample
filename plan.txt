@@ -30,4 +30,8 @@
 [+]Build register crud
 [+]Buid login using passport
    -install dependencies passport passport-local express-session
-   
+[+]Create Order controller and link it in server.js
+[+]Create Orders view with table for customer and admin
+[+]Place order functionality
+[+]Show all my orders on customers orders page
+[+]Show orders on admin orders page   

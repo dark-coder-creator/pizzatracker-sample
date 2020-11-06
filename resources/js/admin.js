@@ -9,18 +9,18 @@ function initAdmin()
 
 
 
-  axios.get('/admin/orders',{
-      headers:{
-        "X-Requested-With":"XMLHttpRequest"
-      }
-  }).then(res=>{
-    orders=res.data
-    markup=generateMarkup(orders)
-    orderTableBody.innerHTML=markup
-  }).catch(err =>{
-      console.log(err)
-  })
-  function renderItems(items) {
+  axios.get('/admin/orders', {
+    headers: {
+        "X-Requested-With": "XMLHttpRequest"
+    }
+}).then(res => {
+    orders = res.data
+    markup = generateMarkup(orders)
+    orderTableBody.innerHTML = markup
+}).catch(err => {
+    console.log(err)
+})
+function renderItems(items) {
     let parsedItems = Object.values(items)
     return parsedItems.map((menuItem) => {
         return `
@@ -28,7 +28,6 @@ function initAdmin()
         `
     }).join('')
   }
-
 
 
 
@@ -79,13 +78,14 @@ function initAdmin()
             <td class="border px-4 py-2">
                 ${ moment(order.createdAt).format('hh:mm A') }
             </td>
-            // <td class="border px-4 py-2">
-            //     ${ order.paymentStatus ? 'paid' : 'Not paid' }
-            // </td>
+             <td class="border px-4 py-2">
+                 ${ order.paymentStatus ? 'paid' : 'Not paid' }
+             </td>
         </tr>
     `
     }).join('')
   }
 }
 
-module.exports=initAdmin
+
+initAdmin()
