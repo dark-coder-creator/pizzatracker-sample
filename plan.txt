@@ -35,3 +35,4 @@
 [+]Place order functionality
 [+]Show all my orders on customers orders page
 [+]Show orders on admin orders page   
+[+]Change order status

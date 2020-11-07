@@ -10,6 +10,7 @@ const session=require('express-session')
 const flash=require('express-flash')
 const MongoDbStore = require('connect-mongo')(session)
 const passport=require('passport')
+const Emitter=require('events')
 //DATABASE CONNECTION
 //const url = 'mongodb+srv://test:test@demo.vedqt.mongodb.net/pizza?retryWrites=true&w=majority';
 mongoose.connect('mongodb+srv://test:test@demo1.vedqt.mongodb.net/pizza?retryWrites=true&w=majority',{useNewUrlParser:true,useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:true}
@@ -28,6 +29,9 @@ console.log('Database connected...');
      mongooseConnection: connection,
       collection: 'sessions'
  })
+ //event emitter
+const eventEmitter=new Emitter()
+app.set('eventEmitter',eventEmitter)
 //session config
 app.use(session({
     secret:"thisismysecretkey",
@@ -67,6 +71,26 @@ app.set('view engine','ejs')
 require('./routes/web')(app)
 
 
-app.listen(PORT,()=>{
+const server=app.listen(PORT,()=>{
     console.log(`Server listening on port ${PORT}`)
+})
+
+//socket
+const io=require('socket.io')(server)
+io.on('connection',(socket)=>{
+    //Join
+    console.log(socket.id)
+    socket.on('join',(orderId)=>{
+        console.log(orderId)
+       socket.join(orderId)
+    })
+})
+
+eventEmitter.on('orderUpdated',(data)=>{
+  io.to(`order_${data.id}`).emit('orderUpdated',data)
+})
+
+
+eventEmitter.on('orderPlaced',(data)=>{
+    io.to('adminRoom').emit('orderPlaced',data)
 })
