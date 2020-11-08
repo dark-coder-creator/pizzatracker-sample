@@ -36,3 +36,7 @@
 [+]Show all my orders on customers orders page
 [+]Show orders on admin orders page   
 [+]Change order status
+[+]Create Orders single page with status
+[+]Order tracker
+  [+]Socket connection
+     -dependencies socket.io
