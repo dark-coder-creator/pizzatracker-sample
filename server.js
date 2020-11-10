@@ -1,4 +1,4 @@
-require('dotenv').config()
+//require('dotenv').config('/.env')
 const express=require('express')
 const app=express()
 const ejs=require('ejs')
@@ -9,9 +9,11 @@ const mongoose=require('mongoose')
 const session=require('express-session')
 const flash=require('express-flash')
 const MongoDbStore = require('connect-mongo')(session)
+const passport=require('passport')
+const Emitter=require('events')
 //DATABASE CONNECTION
-const url = 'mongodb+srv://test:test@demo.vedqt.mongodb.net/pizza?retryWrites=true&w=majority';
-mongoose.connect(url,{useNewUrlParser:true,useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:true}
+//const url = 'mongodb+srv://test:test@demo.vedqt.mongodb.net/pizza?retryWrites=true&w=majority';
+mongoose.connect('mongodb+srv://test:test@demo1.vedqt.mongodb.net/pizza?retryWrites=true&w=majority',{useNewUrlParser:true,useCreateIndex:true,useUnifiedTopology:true,useFindAndModify:true}
 );
 const connection=mongoose.connection;
 connection.once('open',()=>{
@@ -23,30 +25,41 @@ console.log('Database connected...');
 // Session store
 //var app = express();
 
-   let mongoStore = new MongoDbStore({
-      mongooseConnection: connection,
-       collection: 'sessions'
-  })
+  let mongoStore = new MongoDbStore({
+     mongooseConnection: connection,
+      collection: 'sessions'
+ })
+ //event emitter
+const eventEmitter=new Emitter()
+app.set('eventEmitter',eventEmitter)
 //session config
 app.use(session({
-    secret:"mysecretkey",
+    secret:"thisismysecretkey",
     resave: false,
     store: mongoStore,
     saveUninitialized: false,
-    cookie: {maxAge: 1000 * 60 * 60 * 24}//24hours
+    cookie: {maxAge: 1000 * 60 * 60  * 24}//24hours
     
 }))
 
+//Passport config
+const passportInit=require('./app/config/passport')
+passportInit(passport)
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use(flash())
-// app.use(express.urlencoded({ extended: false}))
+
 
 // //ASSETS
 app.use(express.static('public'))
+app.use(express.urlencoded({ extended: false}))
 app.use(express.json())
+
 //Global Middleware
 app.use((req, res, next)=>{
    res.locals.session=req.session
-   res.locals.user=req.user
+   res.locals.user = req.user
    next()
 
 })
@@ -56,8 +69,30 @@ app.use(expressLayout)
 app.set('views',path.join(__dirname,'/resources/views'))
 app.set('view engine','ejs')
 require('./routes/web')(app)
+app.use((req,res)=>{
+    res.status(404).render('errors/404')
+})
 
-
-app.listen(PORT,()=>{
+const server=app.listen(PORT,()=>{
     console.log(`Server listening on port ${PORT}`)
+})
+
+//socket
+const io=require('socket.io')(server)
+io.on('connection',(socket)=>{
+    //Join
+    console.log(socket.id)
+    socket.on('join',(orderId)=>{
+        console.log(orderId)
+       socket.join(orderId)
+    })
+})
+
+eventEmitter.on('orderUpdated',(data)=>{
+  io.to(`order_${data.id}`).emit('orderUpdated',data)
+})
+
+
+eventEmitter.on('orderPlaced',(data)=>{
+    io.to('adminRoom').emit('orderPlaced',data)
 })
