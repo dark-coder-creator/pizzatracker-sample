@@ -1,6 +1,6 @@
 const Order=require('../../../models/order')
 const moment=require('moment')
-const stripe=require('stripe')('Enter your secret key')
+const stripe=require('stripe')(your secret key)
 function orderController () {
     return {
         store(req, res) {
